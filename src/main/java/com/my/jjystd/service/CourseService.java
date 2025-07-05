@@ -1,6 +1,8 @@
 package com.my.jjystd.service;
 
 import com.my.jjystd.entity.Course;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +22,14 @@ public interface CourseService {
     List<Course> findCoursesByName(String name);
     
     /**
+     * 分页根据课程名称查询课程
+     * @param name 课程名称
+     * @param pageable 分页参数
+     * @return 分页课程列表
+     */
+    Page<Course> findCoursesByName(String name, Pageable pageable);
+    
+    /**
      * 根据课程代码查询课程
      * @param courseCode 课程代码
      * @return 课程
@@ -34,10 +44,25 @@ public interface CourseService {
     List<Course> findCoursesByTeacherId(Integer teacherId);
     
     /**
+     * 分页根据教师ID查询课程
+     * @param teacherId 教师ID
+     * @param pageable 分页参数
+     * @return 分页课程列表
+     */
+    Page<Course> findCoursesByTeacherId(Integer teacherId, Pageable pageable);
+    
+    /**
      * 获取所有课程
      * @return 课程列表
      */
     List<Course> findAllCourses();
+    
+    /**
+     * 分页获取所有课程
+     * @param pageable 分页参数
+     * @return 分页课程列表
+     */
+    Page<Course> findAllCourses(Pageable pageable);
     
     /**
      * 新增课程

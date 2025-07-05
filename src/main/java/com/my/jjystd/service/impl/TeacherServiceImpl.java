@@ -6,6 +6,8 @@ import com.my.jjystd.repository.TeacherRepository;
 import com.my.jjystd.service.TeacherService;
 import com.my.jjystd.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +45,11 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public List<Teacher> findAllTeachers() {
         return teacherRepository.findAll();
+    }
+    
+    @Override
+    public Page<Teacher> findAllTeachers(Pageable pageable) {
+        return teacherRepository.findAll(pageable);
     }
     
     @Override

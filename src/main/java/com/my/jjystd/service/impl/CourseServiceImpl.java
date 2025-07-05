@@ -4,6 +4,8 @@ import com.my.jjystd.entity.Course;
 import com.my.jjystd.repository.CourseRepository;
 import com.my.jjystd.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,6 +33,11 @@ public class CourseServiceImpl implements CourseService {
     }
     
     @Override
+    public Page<Course> findCoursesByName(String name, Pageable pageable) {
+        return courseRepository.findByNameContaining(name, pageable);
+    }
+    
+    @Override
     public Course findByCourseCode(String courseCode) {
         return courseRepository.findByCourseCode(courseCode);
     }
@@ -41,8 +48,18 @@ public class CourseServiceImpl implements CourseService {
     }
     
     @Override
+    public Page<Course> findCoursesByTeacherId(Integer teacherId, Pageable pageable) {
+        return courseRepository.findByTeacherId(teacherId, pageable);
+    }
+    
+    @Override
     public List<Course> findAllCourses() {
         return courseRepository.findAll();
+    }
+    
+    @Override
+    public Page<Course> findAllCourses(Pageable pageable) {
+        return courseRepository.findAll(pageable);
     }
     
     @Override

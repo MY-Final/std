@@ -1,6 +1,8 @@
 package com.my.jjystd.service;
 
 import com.my.jjystd.entity.Student;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +33,13 @@ public interface StudentService {
      * @return 学生列表
      */
     List<Student> findAllStudents();
+    
+    /**
+     * 分页获取所有学生列表
+     * @param pageable 分页参数
+     * @return 分页学生列表
+     */
+    Page<Student> findAllStudents(Pageable pageable);
     
     /**
      * 新增学生信息

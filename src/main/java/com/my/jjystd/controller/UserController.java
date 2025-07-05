@@ -17,6 +17,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -195,6 +197,21 @@ public class UserController {
         List<User> users = userService.findAllUsers();
         // 出于安全考虑，返回前清除所有用户的密码
         users.forEach(user -> user.setPassword(null));
+        return Result.success(users);
+    }
+    
+    /**
+     * 分页获取所有用户列表
+     * @param pageable 分页参数
+     * @return 分页用户列表
+     */
+    @Operation(summary = "分页获取所有用户", description = "分页获取系统中所有用户的列表")
+    @ApiResponse(responseCode = "200", description = "查询成功")
+    @GetMapping("/page")
+    public Result<Page<User>> getPagedUsers(Pageable pageable) {
+        Page<User> users = userService.findAllUsers(pageable);
+        // 出于安全考虑，清除密码
+        users.getContent().forEach(user -> user.setPassword(null));
         return Result.success(users);
     }
     

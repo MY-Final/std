@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -57,6 +59,19 @@ public class StudentController {
     @GetMapping("/list")
     public Result<List<Student>> getAllStudents() {
         List<Student> students = studentService.findAllStudents();
+        return Result.success(students);
+    }
+    
+    /**
+     * 分页获取所有学生列表
+     * @param pageable 分页参数
+     * @return 分页学生列表
+     */
+    @Operation(summary = "分页获取所有学生", description = "分页获取系统中所有学生的列表")
+    @ApiResponse(responseCode = "200", description = "查询成功")
+    @GetMapping("/page")
+    public Result<Page<Student>> getPagedStudents(Pageable pageable) {
+        Page<Student> students = studentService.findAllStudents(pageable);
         return Result.success(students);
     }
     

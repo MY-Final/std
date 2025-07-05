@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -64,6 +66,23 @@ public class ScoreController {
     }
     
     /**
+     * 分页根据学生ID查询成绩
+     * @param studentId 学生ID
+     * @param pageable 分页参数
+     * @return 分页成绩列表
+     */
+    @Operation(summary = "分页查询学生的所有成绩", description = "分页获取指定学生的所有课程成绩")
+    @ApiResponse(responseCode = "200", description = "查询成功")
+    @GetMapping("/student/{studentId}/page")
+    public Result<Page<Score>> getPagedScoresByStudentId(
+            @Parameter(description = "学生ID", required = true)
+            @PathVariable Integer studentId,
+            Pageable pageable) {
+        Page<Score> scores = scoreService.findScoresByStudentId(studentId, pageable);
+        return Result.success(scores);
+    }
+    
+    /**
      * 根据课程ID查询成绩
      * @param courseId 课程ID
      * @return 成绩列表
@@ -79,17 +98,76 @@ public class ScoreController {
     }
     
     /**
+     * 分页根据课程ID查询成绩
+     * @param courseId 课程ID
+     * @param pageable 分页参数
+     * @return 分页成绩列表
+     */
+    @Operation(summary = "分页查询课程的所有成绩", description = "分页获取指定课程的所有学生成绩")
+    @ApiResponse(responseCode = "200", description = "查询成功")
+    @GetMapping("/course/{courseId}/page")
+    public Result<Page<Score>> getPagedScoresByCourseId(
+            @Parameter(description = "课程ID", required = true)
+            @PathVariable Integer courseId,
+            Pageable pageable) {
+        Page<Score> scores = scoreService.findScoresByCourseId(courseId, pageable);
+        return Result.success(scores);
+    }
+    
+    /**
      * 根据教师ID查询成绩
      * @param teacherId 教师ID
      * @return 成绩列表
      */
-    @Operation(summary = "查询教师评定的所有成绩", description = "获取指定教师评定的所有成绩")
+    @Operation(summary = "查询教师的所有课程成绩", description = "获取指定教师教授的所有课程的学生成绩")
     @ApiResponse(responseCode = "200", description = "查询成功")
     @GetMapping("/teacher/{teacherId}")
     public Result<List<Score>> getScoresByTeacherId(
             @Parameter(description = "教师ID", required = true)
             @PathVariable Integer teacherId) {
         List<Score> scores = scoreService.findScoresByTeacherId(teacherId);
+        return Result.success(scores);
+    }
+    
+    /**
+     * 分页根据教师ID查询成绩
+     * @param teacherId 教师ID
+     * @param pageable 分页参数
+     * @return 分页成绩列表
+     */
+    @Operation(summary = "分页查询教师的所有课程成绩", description = "分页获取指定教师教授的所有课程的学生成绩")
+    @ApiResponse(responseCode = "200", description = "查询成功")
+    @GetMapping("/teacher/{teacherId}/page")
+    public Result<Page<Score>> getPagedScoresByTeacherId(
+            @Parameter(description = "教师ID", required = true)
+            @PathVariable Integer teacherId,
+            Pageable pageable) {
+        Page<Score> scores = scoreService.findScoresByTeacherId(teacherId, pageable);
+        return Result.success(scores);
+    }
+    
+    /**
+     * 获取所有成绩列表
+     * @return 成绩列表
+     */
+    @Operation(summary = "获取所有成绩", description = "获取系统中所有成绩的列表")
+    @ApiResponse(responseCode = "200", description = "查询成功")
+    @GetMapping("/list")
+    public Result<List<Score>> getAllScores() {
+        List<Score> scores = scoreService.findAllScores();
+        return Result.success(scores);
+    }
+    
+    /**
+     * 分页获取所有成绩列表
+     * @param pageable 分页参数
+     * @return 分页成绩列表
+     */
+    @Operation(summary = "分页获取所有成绩", description = "分页获取系统中所有成绩的列表")
+    @ApiResponse(responseCode = "200", description = "查询成功")
+    @GetMapping("/page")
+    public Result<Page<Score>> getPagedScores(Pageable pageable) {
+        Page<Score> scores = scoreService.findAllScores(pageable);
         return Result.success(scores);
     }
     
@@ -129,18 +207,6 @@ public class ScoreController {
             @Parameter(description = "最高分数", required = true)
             @RequestParam Float maxScore) {
         List<Score> scores = scoreService.findScoresByScoreRange(minScore, maxScore);
-        return Result.success(scores);
-    }
-    
-    /**
-     * 获取所有成绩
-     * @return 成绩列表
-     */
-    @Operation(summary = "获取所有成绩", description = "获取系统中所有成绩的列表")
-    @ApiResponse(responseCode = "200", description = "查询成功")
-    @GetMapping("/list")
-    public Result<List<Score>> getAllScores() {
-        List<Score> scores = scoreService.findAllScores();
         return Result.success(scores);
     }
     

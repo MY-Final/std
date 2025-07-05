@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -64,6 +66,23 @@ public class CourseController {
     }
     
     /**
+     * 分页根据课程名称查询课程
+     * @param name 课程名称
+     * @param pageable 分页参数
+     * @return 分页课程列表
+     */
+    @Operation(summary = "分页根据名称搜索课程", description = "分页通过课程名称搜索相关课程")
+    @ApiResponse(responseCode = "200", description = "查询成功")
+    @GetMapping("/search/page")
+    public Result<Page<Course>> searchPagedCoursesByName(
+            @Parameter(description = "课程名称", required = true)
+            @RequestParam String name,
+            Pageable pageable) {
+        Page<Course> courses = courseService.findCoursesByName(name, pageable);
+        return Result.success(courses);
+    }
+    
+    /**
      * 根据课程代码查询课程
      * @param code 课程代码
      * @return 课程信息
@@ -97,6 +116,23 @@ public class CourseController {
     }
     
     /**
+     * 分页根据教师ID查询课程
+     * @param teacherId 教师ID
+     * @param pageable 分页参数
+     * @return 分页课程列表
+     */
+    @Operation(summary = "分页查询教师的课程", description = "分页获取指定教师教授的所有课程")
+    @ApiResponse(responseCode = "200", description = "查询成功")
+    @GetMapping("/teacher/{teacherId}/page")
+    public Result<Page<Course>> getPagedCoursesByTeacherId(
+            @Parameter(description = "教师ID", required = true)
+            @PathVariable Integer teacherId,
+            Pageable pageable) {
+        Page<Course> courses = courseService.findCoursesByTeacherId(teacherId, pageable);
+        return Result.success(courses);
+    }
+    
+    /**
      * 获取所有课程
      * @return 课程列表
      */
@@ -105,6 +141,19 @@ public class CourseController {
     @GetMapping("/list")
     public Result<List<Course>> getAllCourses() {
         List<Course> courses = courseService.findAllCourses();
+        return Result.success(courses);
+    }
+    
+    /**
+     * 分页获取所有课程
+     * @param pageable 分页参数
+     * @return 分页课程列表
+     */
+    @Operation(summary = "分页获取所有课程", description = "分页获取系统中所有课程的列表")
+    @ApiResponse(responseCode = "200", description = "查询成功")
+    @GetMapping("/page")
+    public Result<Page<Course>> getPagedCourses(Pageable pageable) {
+        Page<Course> courses = courseService.findAllCourses(pageable);
         return Result.success(courses);
     }
     

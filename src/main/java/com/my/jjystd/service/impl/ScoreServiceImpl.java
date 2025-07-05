@@ -4,6 +4,8 @@ import com.my.jjystd.entity.Score;
 import com.my.jjystd.repository.ScoreRepository;
 import com.my.jjystd.service.ScoreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,13 +33,28 @@ public class ScoreServiceImpl implements ScoreService {
     }
     
     @Override
+    public Page<Score> findScoresByStudentId(Integer studentId, Pageable pageable) {
+        return scoreRepository.findByStudentId(studentId, pageable);
+    }
+    
+    @Override
     public List<Score> findScoresByCourseId(Integer courseId) {
         return scoreRepository.findByCourseId(courseId);
     }
     
     @Override
+    public Page<Score> findScoresByCourseId(Integer courseId, Pageable pageable) {
+        return scoreRepository.findByCourseId(courseId, pageable);
+    }
+    
+    @Override
     public List<Score> findScoresByTeacherId(Integer teacherId) {
         return scoreRepository.findByTeacherId(teacherId);
+    }
+    
+    @Override
+    public Page<Score> findScoresByTeacherId(Integer teacherId, Pageable pageable) {
+        return scoreRepository.findByTeacherId(teacherId, pageable);
     }
     
     @Override
@@ -51,8 +68,18 @@ public class ScoreServiceImpl implements ScoreService {
     }
     
     @Override
+    public Page<Score> findScoresByScoreRange(Float minScore, Float maxScore, Pageable pageable) {
+        return scoreRepository.findByScoreBetween(minScore, maxScore, pageable);
+    }
+    
+    @Override
     public List<Score> findAllScores() {
         return scoreRepository.findAll();
+    }
+    
+    @Override
+    public Page<Score> findAllScores(Pageable pageable) {
+        return scoreRepository.findAll(pageable);
     }
     
     @Override

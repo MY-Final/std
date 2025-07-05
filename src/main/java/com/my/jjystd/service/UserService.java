@@ -1,6 +1,8 @@
 package com.my.jjystd.service;
 
 import com.my.jjystd.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +26,13 @@ public interface UserService {
      * @return 用户列表
      */
     List<User> findAllUsers();
+    
+    /**
+     * 分页获取所有用户列表
+     * @param pageable 分页参数
+     * @return 分页用户列表
+     */
+    Page<User> findAllUsers(Pageable pageable);
     
     /**
      * 新增用户

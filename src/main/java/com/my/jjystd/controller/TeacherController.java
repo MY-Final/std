@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -57,6 +59,19 @@ public class TeacherController {
     @GetMapping("/list")
     public Result<List<Teacher>> getAllTeachers() {
         List<Teacher> teachers = teacherService.findAllTeachers();
+        return Result.success(teachers);
+    }
+    
+    /**
+     * 分页获取所有教师列表
+     * @param pageable 分页参数
+     * @return 分页教师列表
+     */
+    @Operation(summary = "分页获取所有教师", description = "分页获取系统中所有教师的列表")
+    @ApiResponse(responseCode = "200", description = "查询成功")
+    @GetMapping("/page")
+    public Result<Page<Teacher>> getPagedTeachers(Pageable pageable) {
+        Page<Teacher> teachers = teacherService.findAllTeachers(pageable);
         return Result.success(teachers);
     }
     
