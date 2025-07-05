@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: jjy-std
+  datasource:
+    url: jdbc:mysql://localhost:3306/std
+    username: root
+    password: lxy666666
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+# springdoc-openapi配置
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  packages-to-scan: com.my.jjystd.controller 
