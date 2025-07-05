@@ -2,7 +2,7 @@ spring:
   application:
     name: jjy-std
   datasource:
-    url: jdbc:mysql://localhost:3306/std
+    url: jdbc:mysql://localhost:3306/student
     username: root
     password: lxy666666
     driver-class-name: com.mysql.cj.jdbc.Driver

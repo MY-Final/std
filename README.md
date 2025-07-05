@@ -75,6 +75,21 @@ Content-Type: application/json
 }
 ```
 
+#### 退出登录
+
+```
+POST /api/user/logout
+```
+
+退出成功返回：
+```json
+{
+  "code": 200,
+  "message": "退出登录成功",
+  "data": null
+}
+```
+
 #### 获取用户信息
 
 ```

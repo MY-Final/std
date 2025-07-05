@@ -22,7 +22,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Optional;import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Tag(name = "用户管理", description = "用户信息管理API")
 @RestController
@@ -274,5 +275,21 @@ public class UserController {
             @PathVariable Integer id) {
         boolean isDeleted = userService.deleteUser(id);
         return isDeleted ? Result.success(null, "删除用户成功") : Result.notFound();
+    }
+    
+    /**
+     * 用户退出登录
+     * @return 退出结果
+     */
+    @Operation(summary = "退出登录", description = "用户退出系统")
+    @ApiResponse(responseCode = "200", description = "退出成功")
+    @PostMapping("/logout")
+    public Result<Void> logout(HttpServletRequest request) {
+        // 清除session
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        return Result.success(null, "退出登录成功");
     }
 } 
