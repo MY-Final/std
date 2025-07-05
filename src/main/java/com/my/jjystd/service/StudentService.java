@@ -1,5 +1,6 @@
 package com.my.jjystd.service;
 
+import com.my.jjystd.controller.dto.StudentQueryDTO;
 import com.my.jjystd.entity.Student;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,6 +41,21 @@ public interface StudentService {
      * @return 分页学生列表
      */
     Page<Student> findAllStudents(Pageable pageable);
+    
+    /**
+     * 动态模糊查询学生信息
+     * @param queryDTO 查询条件
+     * @return 符合条件的学生列表
+     */
+    List<Student> findStudentsByCondition(StudentQueryDTO queryDTO);
+    
+    /**
+     * 分页动态模糊查询学生信息
+     * @param queryDTO 查询条件
+     * @param pageable 分页参数
+     * @return 分页查询结果
+     */
+    Page<Student> findStudentsByCondition(StudentQueryDTO queryDTO, Pageable pageable);
     
     /**
      * 新增学生信息

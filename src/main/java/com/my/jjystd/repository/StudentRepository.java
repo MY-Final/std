@@ -2,11 +2,12 @@ package com.my.jjystd.repository;
 
 import com.my.jjystd.entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface StudentRepository extends JpaRepository<Student, Integer> {
+public interface StudentRepository extends JpaRepository<Student, Integer>, JpaSpecificationExecutor<Student> {
     // 继承了JpaRepository，已经包含了基础的CRUD操作，如findById等
     
     /**

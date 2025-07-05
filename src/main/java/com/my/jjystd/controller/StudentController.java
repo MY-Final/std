@@ -1,6 +1,7 @@
 package com.my.jjystd.controller;
 
 import com.my.jjystd.common.Result;
+import com.my.jjystd.controller.dto.StudentQueryDTO;
 import com.my.jjystd.entity.Student;
 import com.my.jjystd.service.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -72,6 +73,38 @@ public class StudentController {
     @GetMapping("/page")
     public Result<Page<Student>> getPagedStudents(Pageable pageable) {
         Page<Student> students = studentService.findAllStudents(pageable);
+        return Result.success(students);
+    }
+    
+    /**
+     * 动态模糊查询学生信息
+     * @param queryDTO 查询条件
+     * @return 符合条件的学生列表
+     */
+    @Operation(summary = "动态模糊查询学生", description = "根据多个条件动态模糊查询学生信息")
+    @ApiResponse(responseCode = "200", description = "查询成功")
+    @PostMapping("/search")
+    public Result<List<Student>> searchStudents(
+            @Parameter(description = "学生查询条件", required = true)
+            @RequestBody StudentQueryDTO queryDTO) {
+        List<Student> students = studentService.findStudentsByCondition(queryDTO);
+        return Result.success(students);
+    }
+    
+    /**
+     * 分页动态模糊查询学生信息
+     * @param queryDTO 查询条件
+     * @param pageable 分页参数
+     * @return 分页查询结果
+     */
+    @Operation(summary = "分页动态模糊查询学生", description = "根据多个条件分页动态模糊查询学生信息")
+    @ApiResponse(responseCode = "200", description = "查询成功")
+    @PostMapping("/search/page")
+    public Result<Page<Student>> searchPagedStudents(
+            @Parameter(description = "学生查询条件", required = true)
+            @RequestBody StudentQueryDTO queryDTO,
+            Pageable pageable) {
+        Page<Student> students = studentService.findStudentsByCondition(queryDTO, pageable);
         return Result.success(students);
     }
     
