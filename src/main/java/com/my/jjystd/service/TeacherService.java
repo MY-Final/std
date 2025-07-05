@@ -1,5 +1,6 @@
 package com.my.jjystd.service;
 
+import com.my.jjystd.controller.dto.TeacherQueryDTO;
 import com.my.jjystd.entity.Teacher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,6 +41,21 @@ public interface TeacherService {
      * @return 分页教师列表
      */
     Page<Teacher> findAllTeachers(Pageable pageable);
+    
+    /**
+     * 动态模糊查询教师信息
+     * @param queryDTO 查询条件
+     * @return 符合条件的教师列表
+     */
+    List<Teacher> findTeachersByCondition(TeacherQueryDTO queryDTO);
+    
+    /**
+     * 分页动态模糊查询教师信息
+     * @param queryDTO 查询条件
+     * @param pageable 分页参数
+     * @return 分页查询结果
+     */
+    Page<Teacher> findTeachersByCondition(TeacherQueryDTO queryDTO, Pageable pageable);
     
     /**
      * 新增教师信息

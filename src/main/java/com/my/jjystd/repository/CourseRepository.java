@@ -4,11 +4,12 @@ import com.my.jjystd.entity.Course;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CourseRepository extends JpaRepository<Course, Integer> {
+public interface CourseRepository extends JpaRepository<Course, Integer>, JpaSpecificationExecutor<Course> {
     /**
      * 根据课程名称查询课程
      * @param name 课程名称

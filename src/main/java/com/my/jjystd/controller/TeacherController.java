@@ -1,6 +1,7 @@
 package com.my.jjystd.controller;
 
 import com.my.jjystd.common.Result;
+import com.my.jjystd.controller.dto.TeacherQueryDTO;
 import com.my.jjystd.entity.Teacher;
 import com.my.jjystd.service.TeacherService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -72,6 +73,38 @@ public class TeacherController {
     @GetMapping("/page")
     public Result<Page<Teacher>> getPagedTeachers(Pageable pageable) {
         Page<Teacher> teachers = teacherService.findAllTeachers(pageable);
+        return Result.success(teachers);
+    }
+    
+    /**
+     * 动态模糊查询教师信息
+     * @param queryDTO 查询条件
+     * @return 符合条件的教师列表
+     */
+    @Operation(summary = "动态模糊查询教师", description = "根据多个条件动态模糊查询教师信息")
+    @ApiResponse(responseCode = "200", description = "查询成功")
+    @PostMapping("/search")
+    public Result<List<Teacher>> searchTeachers(
+            @Parameter(description = "教师查询条件", required = true)
+            @RequestBody TeacherQueryDTO queryDTO) {
+        List<Teacher> teachers = teacherService.findTeachersByCondition(queryDTO);
+        return Result.success(teachers);
+    }
+    
+    /**
+     * 分页动态模糊查询教师信息
+     * @param queryDTO 查询条件
+     * @param pageable 分页参数
+     * @return 分页查询结果
+     */
+    @Operation(summary = "分页动态模糊查询教师", description = "根据多个条件分页动态模糊查询教师信息")
+    @ApiResponse(responseCode = "200", description = "查询成功")
+    @PostMapping("/search/page")
+    public Result<Page<Teacher>> searchPagedTeachers(
+            @Parameter(description = "教师查询条件", required = true)
+            @RequestBody TeacherQueryDTO queryDTO,
+            Pageable pageable) {
+        Page<Teacher> teachers = teacherService.findTeachersByCondition(queryDTO, pageable);
         return Result.success(teachers);
     }
     

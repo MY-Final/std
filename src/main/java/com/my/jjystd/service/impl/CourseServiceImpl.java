@@ -1,13 +1,20 @@
 package com.my.jjystd.service.impl;
 
+import com.my.jjystd.controller.dto.CourseQueryDTO;
 import com.my.jjystd.entity.Course;
 import com.my.jjystd.repository.CourseRepository;
 import com.my.jjystd.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Predicate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Date;
@@ -104,5 +111,66 @@ public class CourseServiceImpl implements CourseService {
             courseRepository.delete(course);
             return true;
         }).orElse(false);
+    }
+    
+    @Override
+    public List<Course> findCoursesByCondition(CourseQueryDTO queryDTO) {
+        Specification<Course> spec = buildSpecification(queryDTO);
+        return courseRepository.findAll(spec);
+    }
+    
+    @Override
+    public Page<Course> findCoursesByCondition(CourseQueryDTO queryDTO, Pageable pageable) {
+        Specification<Course> spec = buildSpecification(queryDTO);
+        return courseRepository.findAll(spec, pageable);
+    }
+    
+    /**
+     * 构建动态查询条件
+     * @param queryDTO 查询参数
+     * @return 查询条件Specification
+     */
+    private Specification<Course> buildSpecification(CourseQueryDTO queryDTO) {
+        return (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            
+            // 根据课程名称模糊查询
+            if (StringUtils.hasText(queryDTO.getName())) {
+                predicates.add(criteriaBuilder.like(root.get("name"), "%" + queryDTO.getName() + "%"));
+            }
+            
+            // 根据课程代码模糊查询
+            if (StringUtils.hasText(queryDTO.getCourseCode())) {
+                predicates.add(criteriaBuilder.like(root.get("courseCode"), "%" + queryDTO.getCourseCode() + "%"));
+            }
+            
+            // 根据课程描述模糊查询
+            if (StringUtils.hasText(queryDTO.getDescription())) {
+                predicates.add(criteriaBuilder.like(root.get("description"), "%" + queryDTO.getDescription() + "%"));
+            }
+            
+            // 根据教师ID精确查询
+            if (queryDTO.getTeacherId() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("teacher").get("id"), queryDTO.getTeacherId()));
+            }
+            
+            // 根据教师姓名模糊查询
+            if (StringUtils.hasText(queryDTO.getTeacherName())) {
+                Join<Object, Object> teacherJoin = root.join("teacher", JoinType.INNER);
+                predicates.add(criteriaBuilder.like(teacherJoin.get("name"), "%" + queryDTO.getTeacherName() + "%"));
+            }
+            
+            // 根据学分精确查询
+            if (queryDTO.getCredit() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("credit"), queryDTO.getCredit()));
+            }
+            
+            // 根据状态精确查询
+            if (queryDTO.getStatus() != null) {
+                predicates.add(criteriaBuilder.equal(root.get("status"), queryDTO.getStatus()));
+            }
+            
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
     }
 } 

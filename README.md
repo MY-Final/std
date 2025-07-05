@@ -145,6 +145,42 @@ GET /api/student/{id}
 GET /api/student/list
 ```
 
+#### 动态模糊查询学生
+
+```
+POST /api/student/search
+Content-Type: application/json
+
+{
+  "name": "姓名关键字",
+  "studentNo": "学号关键字",
+  "gender": "性别",
+  "className": "班级关键字",
+  "department": "院系关键字",
+  "major": "专业关键字",
+  "phone": "手机号关键字",
+  "email": "邮箱关键字"
+}
+```
+
+#### 分页动态模糊查询学生
+
+```
+POST /api/student/search/page?page=0&size=10&sort=id,desc
+Content-Type: application/json
+
+{
+  "name": "姓名关键字",
+  "studentNo": "学号关键字",
+  "gender": "性别",
+  "className": "班级关键字",
+  "department": "院系关键字",
+  "major": "专业关键字",
+  "phone": "手机号关键字",
+  "email": "邮箱关键字"
+}
+```
+
 #### 新增学生
 
 ```
@@ -203,6 +239,40 @@ GET /api/teacher/{id}
 
 ```
 GET /api/teacher/list
+```
+
+#### 动态模糊查询教师
+
+```
+POST /api/teacher/search
+Content-Type: application/json
+
+{
+  "name": "姓名关键字",
+  "teacherNo": "教师编号关键字",
+  "gender": "性别",
+  "title": "职称关键字",
+  "department": "院系关键字",
+  "phone": "手机号关键字",
+  "email": "邮箱关键字"
+}
+```
+
+#### 分页动态模糊查询教师
+
+```
+POST /api/teacher/search/page?page=0&size=10&sort=id,desc
+Content-Type: application/json
+
+{
+  "name": "姓名关键字",
+  "teacherNo": "教师编号关键字",
+  "gender": "性别",
+  "title": "职称关键字",
+  "department": "院系关键字",
+  "phone": "手机号关键字",
+  "email": "邮箱关键字"
+}
 ```
 
 #### 新增教师
@@ -271,6 +341,40 @@ GET /api/course/code/{code}
 
 ```
 GET /api/course/teacher/{teacherId}
+```
+
+#### 动态模糊查询课程
+
+```
+POST /api/course/search
+Content-Type: application/json
+
+{
+  "name": "课程名称关键字",
+  "courseCode": "课程代码关键字",
+  "description": "课程描述关键字",
+  "teacherId": 1,
+  "teacherName": "教师姓名关键字",
+  "credit": 3.0,
+  "status": 1
+}
+```
+
+#### 分页动态模糊查询课程
+
+```
+POST /api/course/search/page?page=0&size=10&sort=id,desc
+Content-Type: application/json
+
+{
+  "name": "课程名称关键字",
+  "courseCode": "课程代码关键字",
+  "description": "课程描述关键字",
+  "teacherId": 1,
+  "teacherName": "教师姓名关键字",
+  "credit": 3.0,
+  "status": 1
+}
 ```
 
 #### 获取所有课程

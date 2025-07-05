@@ -1,5 +1,6 @@
 package com.my.jjystd.service;
 
+import com.my.jjystd.controller.dto.CourseQueryDTO;
 import com.my.jjystd.entity.Course;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -50,6 +51,21 @@ public interface CourseService {
      * @return 分页课程列表
      */
     Page<Course> findCoursesByTeacherId(Integer teacherId, Pageable pageable);
+    
+    /**
+     * 动态模糊查询课程信息
+     * @param queryDTO 查询条件
+     * @return 符合条件的课程列表
+     */
+    List<Course> findCoursesByCondition(CourseQueryDTO queryDTO);
+    
+    /**
+     * 分页动态模糊查询课程信息
+     * @param queryDTO 查询条件
+     * @param pageable 分页参数
+     * @return 分页查询结果
+     */
+    Page<Course> findCoursesByCondition(CourseQueryDTO queryDTO, Pageable pageable);
     
     /**
      * 获取所有课程

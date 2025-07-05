@@ -1,5 +1,6 @@
 package com.my.jjystd.service.impl;
 
+import com.my.jjystd.controller.dto.TeacherQueryDTO;
 import com.my.jjystd.entity.Teacher;
 import com.my.jjystd.entity.User;
 import com.my.jjystd.repository.TeacherRepository;
@@ -8,9 +9,13 @@ import com.my.jjystd.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import jakarta.persistence.criteria.Predicate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Date;
@@ -50,6 +55,66 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public Page<Teacher> findAllTeachers(Pageable pageable) {
         return teacherRepository.findAll(pageable);
+    }
+    
+    @Override
+    public List<Teacher> findTeachersByCondition(TeacherQueryDTO queryDTO) {
+        Specification<Teacher> spec = buildSpecification(queryDTO);
+        return teacherRepository.findAll(spec);
+    }
+    
+    @Override
+    public Page<Teacher> findTeachersByCondition(TeacherQueryDTO queryDTO, Pageable pageable) {
+        Specification<Teacher> spec = buildSpecification(queryDTO);
+        return teacherRepository.findAll(spec, pageable);
+    }
+    
+    /**
+     * 构建动态查询条件
+     * @param queryDTO 查询参数
+     * @return 查询条件Specification
+     */
+    private Specification<Teacher> buildSpecification(TeacherQueryDTO queryDTO) {
+        return (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            
+            // 根据姓名模糊查询
+            if (StringUtils.hasText(queryDTO.getName())) {
+                predicates.add(criteriaBuilder.like(root.get("name"), "%" + queryDTO.getName() + "%"));
+            }
+            
+            // 根据教师编号模糊查询
+            if (StringUtils.hasText(queryDTO.getTeacherNo())) {
+                predicates.add(criteriaBuilder.like(root.get("teacherNo"), "%" + queryDTO.getTeacherNo() + "%"));
+            }
+            
+            // 根据性别精确查询
+            if (StringUtils.hasText(queryDTO.getGender())) {
+                predicates.add(criteriaBuilder.equal(root.get("gender"), queryDTO.getGender()));
+            }
+            
+            // 根据职称模糊查询
+            if (StringUtils.hasText(queryDTO.getTitle())) {
+                predicates.add(criteriaBuilder.like(root.get("title"), "%" + queryDTO.getTitle() + "%"));
+            }
+            
+            // 根据院系模糊查询
+            if (StringUtils.hasText(queryDTO.getDepartment())) {
+                predicates.add(criteriaBuilder.like(root.get("department"), "%" + queryDTO.getDepartment() + "%"));
+            }
+            
+            // 根据电话模糊查询
+            if (StringUtils.hasText(queryDTO.getPhone())) {
+                predicates.add(criteriaBuilder.like(root.get("phone"), "%" + queryDTO.getPhone() + "%"));
+            }
+            
+            // 根据邮箱模糊查询
+            if (StringUtils.hasText(queryDTO.getEmail())) {
+                predicates.add(criteriaBuilder.like(root.get("email"), "%" + queryDTO.getEmail() + "%"));
+            }
+            
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
     }
     
     @Override

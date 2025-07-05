@@ -1,6 +1,7 @@
 package com.my.jjystd.controller;
 
 import com.my.jjystd.common.Result;
+import com.my.jjystd.controller.dto.CourseQueryDTO;
 import com.my.jjystd.entity.Course;
 import com.my.jjystd.service.CourseService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -154,6 +155,38 @@ public class CourseController {
     @GetMapping("/page")
     public Result<Page<Course>> getPagedCourses(Pageable pageable) {
         Page<Course> courses = courseService.findAllCourses(pageable);
+        return Result.success(courses);
+    }
+    
+    /**
+     * 动态模糊查询课程信息
+     * @param queryDTO 查询条件
+     * @return 符合条件的课程列表
+     */
+    @Operation(summary = "动态模糊查询课程", description = "根据多个条件动态模糊查询课程信息")
+    @ApiResponse(responseCode = "200", description = "查询成功")
+    @PostMapping("/search")
+    public Result<List<Course>> searchCourses(
+            @Parameter(description = "课程查询条件", required = true)
+            @RequestBody CourseQueryDTO queryDTO) {
+        List<Course> courses = courseService.findCoursesByCondition(queryDTO);
+        return Result.success(courses);
+    }
+    
+    /**
+     * 分页动态模糊查询课程信息
+     * @param queryDTO 查询条件
+     * @param pageable 分页参数
+     * @return 分页查询结果
+     */
+    @Operation(summary = "分页动态模糊查询课程", description = "根据多个条件分页动态模糊查询课程信息")
+    @ApiResponse(responseCode = "200", description = "查询成功")
+    @PostMapping("/search/page")
+    public Result<Page<Course>> searchPagedCourses(
+            @Parameter(description = "课程查询条件", required = true)
+            @RequestBody CourseQueryDTO queryDTO,
+            Pageable pageable) {
+        Page<Course> courses = courseService.findCoursesByCondition(queryDTO, pageable);
         return Result.success(courses);
     }
     
